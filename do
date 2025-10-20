@@ -3,7 +3,7 @@ set -euo pipefail
 
 # see https://github.com/siderolabs/talos/releases
 # renovate: datasource=github-releases depName=siderolabs/talos
-talos_version="1.7.5"
+talos_version="1.11.3"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/vmtoolsd-guest-agent
 # renovate: datasource=docker depName=siderolabs/vmtoolsd-guest-agent registryUrl=https://ghcr.io
@@ -14,13 +14,13 @@ talos_vmtoolsd_guest_agent_extension_version="0.5.1"
 # see https://github.com/LINBIT/drbd
 # NB the full version version is actually $version-v$talos_version, which we
 #    use in the talos systemExtension imageRef.
-# renovate: datasource=docker depName=siderolabs/drbd extractVersion=^(?<version>.+)-v1\.7\.5 registryUrl=https://ghcr.io
-talos_drbd_extension_version="9.2.8"
+# renovate: datasource=docker depName=siderolabs/drbd extractVersion=^(?<version>.+)-v1\.11\.3 registryUrl=https://ghcr.io
+talos_drbd_extension_version="9.2.14"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/spin
 # see https://github.com/siderolabs/extensions/tree/main/container-runtime/spin
 # renovate: datasource=docker depName=siderolabs/spin registryUrl=https://ghcr.io
-talos_spin_extension_version="0.15.0"
+talos_spin_extension_version="0.21.0"
 
 # see https://github.com/piraeusdatastore/piraeus-operator/releases
 # renovate: datasource=github-releases depName=piraeusdatastore/piraeus-operator
