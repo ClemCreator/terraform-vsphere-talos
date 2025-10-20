@@ -7,7 +7,7 @@ talos_version="1.11.3"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/vmtoolsd-guest-agent
 # renovate: datasource=docker depName=siderolabs/vmtoolsd-guest-agent registryUrl=https://ghcr.io
-talos_vmtoolsd_guest_agent_extension_version="0.5.1"
+talos_vmtoolsd_guest_agent_extension_version="1.4.0"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/drbd
 # see https://github.com/siderolabs/extensions/tree/main/storage/drbd
