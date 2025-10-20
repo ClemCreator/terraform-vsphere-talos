@@ -40,7 +40,7 @@ function step {
 function build_talos_image {
   # see https://www.talos.dev/v1.7/talos-guides/install/boot-assets/
   # see https://www.talos.dev/v1.7/advanced/metal-network-configuration/
-  # see Profile type at https://github.com/siderolabs/talos/blob/v1.7.5/pkg/imager/profile/profile.go#L22-L45
+  # see Profile type at https://github.com/siderolabs/talos/blob/v1.11.3/pkg/imager/profile/profile.go#L22-L45
   local talos_version_tag="v$talos_version"
   rm -rf tmp/talos
   mkdir -p tmp/talos
