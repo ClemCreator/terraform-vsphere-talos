@@ -12,6 +12,7 @@ helmCharts:
     includeCRDs: true
     valuesFile: values.yaml
 
-patches:
-  - path: l2-announcement-policy.yaml
-  - path: lb-ip-pool.yaml
+# Additional resources applied after Helm chart
+resources:
+  - l2-announcement-policy.yaml
+  - lb-ip-pool.yaml

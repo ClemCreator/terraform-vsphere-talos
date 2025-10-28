@@ -3,9 +3,6 @@ kind: Kustomization
 
 namespace: cert-manager
 
-resources:
-  - namespace.yaml
-
 helmCharts:
   - name: cert-manager
     repo: https://charts.jetstack.io
@@ -15,7 +12,9 @@ helmCharts:
     includeCRDs: true
     valuesFile: values.yaml
 
-patches:
-  - path: cluster-issuer-selfsigned.yaml
-  - path: certificate-ingress.yaml
-  - path: cluster-issuer-ingress.yaml
+# Additional resources applied after Helm chart
+resources:
+  - namespace.yaml
+  - cluster-issuer-selfsigned.yaml
+  - certificate-ingress.yaml
+  - cluster-issuer-ingress.yaml
