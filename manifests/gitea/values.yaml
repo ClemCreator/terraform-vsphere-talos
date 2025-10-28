@@ -28,7 +28,7 @@ gitea:
   admin:
     username: gitea
     password: gitea
-    email: gitea@example.test
+    email: gitea@civastack.net
 
 service:
   http:
@@ -43,11 +43,11 @@ service:
 ingress:
   enabled: true
   hosts:
-    - host: gitea.example.test
+    - host: gitea.civastack.net
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: gitea-tls
       hosts:
-        - gitea.example.test
+        - gitea.civastack.net

@@ -2,6 +2,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
+  # Bootstrap components (optional ArgoCD management)
+  # These are already deployed as inline manifests, but can be managed by ArgoCD for updates
+  - cilium.yaml
+  - cert-manager.yaml
+  - argocd.yaml
+  
+  # Application components (ArgoCD-managed)
   - gitea.yaml
   - trust-manager.yaml
   - reloader.yaml

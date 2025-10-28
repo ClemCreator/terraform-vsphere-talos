@@ -1,22 +1,22 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: gitea
-  namespace: default
+  name: ingress
+  namespace: cert-manager
 spec:
+  isCA: true
   subject:
     organizations:
       - civastack.net
     organizationalUnits:
       - Kubernetes
-  commonName: gitea
-  dnsNames:
-    - gitea.civastack.net
+  commonName: Kubernetes Ingress
   privateKey:
     algorithm: ECDSA
     size: 256
-  duration: 4320h
-  secretName: gitea-tls
+  duration: 4320h  # 180 days
+  secretName: ingress-tls
   issuerRef:
+    name: selfsigned
     kind: ClusterIssuer
-    name: ingress
+    group: cert-manager.io

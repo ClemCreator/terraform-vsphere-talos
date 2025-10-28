@@ -134,8 +134,10 @@ data "talos_machine_configuration" "controller" {
           {
             name = "cilium"
             contents = join("---\n", [
-              data.helm_template.cilium.manifest,
-              "# Source cilium.tf\n${local.cilium_external_lb_manifest}",
+              "# Source: manifests-inline.tf (generated from manifests/inline/cilium/ TPL files)",
+              data.helm_template.cilium_inline.manifest,
+              "# Source: Cilium external LoadBalancer IP pool",
+              local.cilium_external_lb_manifest,
             ])
           },
           {
@@ -148,8 +150,10 @@ data "talos_machine_configuration" "controller" {
                   name = "cert-manager"
                 }
               }),
-              data.helm_template.cert_manager.manifest,
-              "# Source cert-manager.tf\n${local.cert_manager_ingress_ca_manifest}",
+              "# Source: manifests-inline.tf (generated from manifests/inline/cert-manager/ TPL files)",
+              data.helm_template.cert_manager_inline.manifest,
+              "# Source: cert-manager ingress CA configuration",
+              local.cert_manager_ingress_ca_manifest,
             ])
           },
           {
@@ -162,12 +166,16 @@ data "talos_machine_configuration" "controller" {
                   name = local.argocd_namespace
                 }
               }),
-              data.helm_template.argocd.manifest,
-              "# Source argocd.tf\n${local.argocd_manifest}",
+              "# Source: manifests-inline.tf (generated from manifests/inline/argocd/ TPL files)",
+              data.helm_template.argocd_inline.manifest,
+              "# Source: ArgoCD server certificate",
+              local.argocd_manifest,
             ])
           },
           # NOTE: trust-manager, reloader, and gitea are now managed by ArgoCD
-          # See manifests/apps/ for their definitions
+          # NOTE: cilium, cert-manager, and argocd can ALSO be managed by ArgoCD (see manifests/apps/)
+          # See manifests/apps/ for all ArgoCD Application definitions
+          # See manifests/inline/ for TPL files used to generate the above inline manifests
         ],
       },
     }),

@@ -162,3 +162,25 @@ variable "prefix" {
   type    = string
   default = "terraform-talos-example"
 }
+
+# Helm chart versions for inline manifests
+variable "cilium_version" {
+  description = "Cilium Helm chart version"
+  type        = string
+  # renovate: datasource=helm depName=cilium registryUrl=https://helm.cilium.io
+  default     = "1.16.4"
+}
+
+variable "cert_manager_version" {
+  description = "cert-manager Helm chart version"
+  type        = string
+  # renovate: datasource=helm depName=cert-manager registryUrl=https://charts.jetstack.io
+  default     = "1.19.1"
+}
+
+variable "argocd_version" {
+  description = "ArgoCD Helm chart version"
+  type        = string
+  # renovate: datasource=helm depName=argo-cd registryUrl=https://argoproj.github.io/argo-helm
+  default     = "9.0.3"
+}

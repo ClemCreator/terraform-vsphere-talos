@@ -1,0 +1,10 @@
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: external
+  namespace: kube-system
+spec:
+  blocks:
+    # Adjust these IPs to match your cluster_node_network_load_balancer range
+    - start: 172.18.44.130
+      stop: 172.18.44.230

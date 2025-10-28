@@ -18,15 +18,28 @@ resource "null_resource" "deploy_app_root" {
   # Trigger redeployment when the app-root manifest changes
   triggers = {
     manifest_sha = filesha256("${path.module}/manifests/bootstrap/app-root.yaml")
+    kubeconfig   = talos_cluster_kubeconfig.talos.kubeconfig_raw
   }
 
   provisioner "local-exec" {
     command = <<-EOT
+      # Create kubeconfig file from Terraform output
+      cat > ${path.module}/kubeconfig.yml <<'KUBECONFIG'
+${talos_cluster_kubeconfig.talos.kubeconfig_raw}
+KUBECONFIG
+      
       # Wait for ArgoCD to be ready (deployed as inline manifest)
       echo "Waiting for ArgoCD to be ready..."
+      max_attempts=60
+      attempt=0
       until kubectl --kubeconfig ${path.module}/kubeconfig.yml \
-        -n argocd get deployment argocd-server -o jsonpath='{.status.availableReplicas}' | grep -q "1"; do
-        echo "Waiting for ArgoCD server..."
+        -n argocd get deployment argocd-server -o jsonpath='{.status.availableReplicas}' 2>/dev/null | grep -q "1"; do
+        attempt=$((attempt + 1))
+        if [ $attempt -ge $max_attempts ]; then
+          echo "ERROR: ArgoCD server did not become ready after $max_attempts attempts"
+          exit 1
+        fi
+        echo "Waiting for ArgoCD server... (attempt $attempt/$max_attempts)"
         sleep 5
       done
       
@@ -37,6 +50,8 @@ resource "null_resource" "deploy_app_root" {
       # Wait for app-root to be synced
       echo "Waiting for app-root to sync..."
       sleep 10
+      
+      echo "✅ app-root deployed successfully!"
     EOT
   }
 
@@ -44,7 +59,9 @@ resource "null_resource" "deploy_app_root" {
   provisioner "local-exec" {
     when    = destroy
     command = <<-EOT
-      kubectl --kubeconfig ${path.module}/kubeconfig.yml delete -f ${path.module}/manifests/bootstrap/app-root.yaml --ignore-not-found=true || true
+      if [ -f ${path.module}/kubeconfig.yml ]; then
+        kubectl --kubeconfig ${path.module}/kubeconfig.yml delete -f ${path.module}/manifests/bootstrap/app-root.yaml --ignore-not-found=true || true
+      fi
     EOT
   }
 }

@@ -1,22 +1,22 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: gitea
-  namespace: default
+  name: argocd-server
+  namespace: argocd
 spec:
   subject:
     organizations:
       - civastack.net
     organizationalUnits:
       - Kubernetes
-  commonName: gitea
+  commonName: Argo CD Server
   dnsNames:
-    - gitea.civastack.net
+    - argocd.civastack.net
   privateKey:
     algorithm: ECDSA
     size: 256
-  duration: 4320h
-  secretName: gitea-tls
+  duration: 4320h  # 180 days
+  secretName: argocd-server-tls
   issuerRef:
     kind: ClusterIssuer
     name: ingress
