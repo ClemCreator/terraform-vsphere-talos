@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-root
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    # NOTE: Adaptez cette URL avec votre repo Git réel
+    # Pour l'instant, on utilise le chemin local, mais en production
+    # ce devrait être votre repo GitHub/GitLab
+    repoURL: https://github.com/clemcreator/terraform-vsphere-talos
+    targetRevision: main
+    path: manifests/apps
+  destination:
+    name: in-cluster
+    namespace: argocd
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true

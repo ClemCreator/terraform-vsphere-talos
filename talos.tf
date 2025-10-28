@@ -153,28 +153,6 @@ data "talos_machine_configuration" "controller" {
             ])
           },
           {
-            name     = "trust-manager"
-            contents = data.helm_template.trust_manager.manifest
-          },
-          {
-            name     = "reloader"
-            contents = data.helm_template.reloader.manifest
-          },
-          {
-            name = "gitea"
-            contents = join("---\n", [
-              yamlencode({
-                apiVersion = "v1"
-                kind       = "Namespace"
-                metadata = {
-                  name = local.gitea_namespace
-                }
-              }),
-              data.helm_template.gitea.manifest,
-              "# Source gitea.tf\n${local.gitea_manifest}",
-            ])
-          },
-          {
             name = "argocd"
             contents = join("---\n", [
               yamlencode({
@@ -188,6 +166,8 @@ data "talos_machine_configuration" "controller" {
               "# Source argocd.tf\n${local.argocd_manifest}",
             ])
           },
+          # NOTE: trust-manager, reloader, and gitea are now managed by ArgoCD
+          # See manifests/apps/ for their definitions
         ],
       },
     }),

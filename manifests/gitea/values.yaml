@@ -1,0 +1,53 @@
+redis-cluster:
+  enabled: false
+
+redis:
+  enabled: false
+
+postgresql:
+  enabled: false
+
+postgresql-ha:
+  enabled: false
+
+persistence:
+  enabled: true
+  storageClass: linstor-lvm-r1
+  claimName: gitea
+
+gitea:
+  config:
+    database:
+      DB_TYPE: sqlite3
+    session:
+      PROVIDER: memory
+    cache:
+      ADAPTER: memory
+    queue:
+      TYPE: level
+  admin:
+    username: gitea
+    password: gitea
+    email: gitea@example.test
+
+service:
+  http:
+    type: ClusterIP
+    port: 3000
+    clusterIP: null
+  ssh:
+    type: ClusterIP
+    port: 22
+    clusterIP: null
+
+ingress:
+  enabled: true
+  hosts:
+    - host: gitea.example.test
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: gitea-tls
+      hosts:
+        - gitea.example.test
