@@ -60,14 +60,16 @@ resource "vsphere_virtual_machine" "controller" {
     template_uuid = data.vsphere_virtual_machine.talos_template.id
   }
   # NB this extra_config data ends-up inside the VM .vmx file.
+  # NB guestinfo.talos.config is only applied at bootstrap time.
+  #    After that, we manage the cluster with talosctl upgrade and ArgoCD.
   extra_config = {
     "guestinfo.talos.config" = base64encode(data.talos_machine_configuration.controller[count.index].machine_configuration)
   }
   lifecycle {
-    # TODO why is terraform plan trying to modify these?
     ignore_changes = [
       ept_rvi_mode,
       hv_mode,
+      extra_config["guestinfo.talos.config"],
     ]
   }
 }
@@ -111,14 +113,16 @@ resource "vsphere_virtual_machine" "worker" {
     template_uuid = data.vsphere_virtual_machine.talos_template.id
   }
   # NB this extra_config data ends-up inside the VM .vmx file.
+  # NB guestinfo.talos.config is only applied at bootstrap time.
+  #    After that, we manage the cluster with talosctl upgrade and ArgoCD.
   extra_config = {
     "guestinfo.talos.config" = base64encode(data.talos_machine_configuration.worker[count.index].machine_configuration)
   }
   lifecycle {
-    # TODO why is terraform plan trying to modify these?
     ignore_changes = [
       ept_rvi_mode,
       hv_mode,
+      extra_config["guestinfo.talos.config"],
     ]
   }
 }
