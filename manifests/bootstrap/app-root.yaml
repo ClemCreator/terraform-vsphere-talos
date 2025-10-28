@@ -12,7 +12,7 @@ spec:
     # Pour l'instant, on utilise le chemin local, mais en production
     # ce devrait être votre repo GitHub/GitLab
     repoURL: https://github.com/clemcreator/terraform-vsphere-talos
-    targetRevision: main
+    targetRevision: devel
     path: manifests/apps
   destination:
     name: in-cluster

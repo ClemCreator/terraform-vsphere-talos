@@ -278,7 +278,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/YOUR_ORG/terraform-vsphere-talos
-    targetRevision: HEAD
+    targetRevision: devel
     path: manifests/myapp
   destination:
     server: https://kubernetes.default.svc

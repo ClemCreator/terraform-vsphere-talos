@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/clemcreator/terraform-vsphere-talos
-    targetRevision: main
+    targetRevision: devel
     path: manifests/gitea
   destination:
     server: https://kubernetes.default.svc

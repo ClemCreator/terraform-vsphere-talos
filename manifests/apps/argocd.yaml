@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/clemcreator/terraform-vsphere-talos
-    targetRevision: HEAD
+    targetRevision: devel
     path: manifests/argocd-managed
   destination:
     server: https://kubernetes.default.svc
