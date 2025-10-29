@@ -46,7 +46,7 @@ ingressController:
   enabled: true
   default: true
   loadbalancerMode: shared
-  enforceHttps: false
+  enforceHttps: true
 
 # Envoy proxy for ingress
 envoy:
