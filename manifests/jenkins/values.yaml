@@ -33,12 +33,12 @@ controller:
 
   # Install essential plugins
   installPlugins:
+    # - credentials-binding:680.v6ba_0e0b_64854 | Version issue
+    # - docker-workflow:580.vc0c340686b_54
     - kubernetes:4384.v1b_6367f393d9
     - workflow-aggregator:608.v67378e9d3db_1
     - git:5.8.0
-    - configuration-as-code:2006.v001a_2ca_6b_574
-    - credentials-binding:680.v6ba_0e0b_64854
-    - docker-workflow:580.vc0c340686b_54
+    - configuration-as-code:2006.v001a_2ca_6b_574 
 
   # JCasC configuration
   JCasC:
