@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: jenkins
+  namespace: jenkins
+spec:
+  subject:
+    organizations:
+      - civastack.net
+    organizationalUnits:
+      - Kubernetes
+  commonName: Jenkins CI/CD Server
+  dnsNames:
+    - jenkins.civastack.net
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  duration: 4320h  # 180 days
+  secretName: jenkins-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: ingress

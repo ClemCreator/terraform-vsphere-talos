@@ -1,0 +1,74 @@
+# Jenkins Helm values for Kubernetes deployment
+# see https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins
+
+controller:
+  adminUser: "admin"
+  # Password will be auto-generated if not set
+  # adminPassword: ""
+  
+  # Jenkins URL configuration
+  jenkinsUrl: "https://jenkins.civastack.net"
+  jenkinsUriPrefix: ""
+
+  # Resource limits
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "2000m"
+      memory: "4Gi"
+
+  # Ingress configuration
+  ingress:
+    enabled: true
+    ingressClassName: cilium
+    hostName: jenkins.civastack.net
+    tls: true
+    annotations: {}
+    # TLS secret will be created by cert-manager
+
+  # Install essential plugins
+  installPlugins:
+    - kubernetes:4384.v1b_6367f393d9
+    - workflow-aggregator:608.v67378e9d3db_1
+    - git:5.8.0
+    - configuration-as-code:2006.v001a_2ca_6b_574
+    - credentials-binding:680.v6ba_0e0b_64854
+    - docker-workflow:580.vc0c340686b_54
+
+  # JCasC configuration
+  JCasC:
+    defaultConfig: true
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: "Jenkins - CI/CD Server managed via GitOps"
+
+# Agent configuration
+agent:
+  enabled: true
+  resources:
+    requests:
+      cpu: "512m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+
+# Persistence
+persistence:
+  enabled: true
+  storageClass: ""  # Use default storage class
+  size: "20Gi"
+  accessMode: "ReadWriteOnce"
+
+# Service Account
+serviceAccount:
+  create: true
+  annotations: {}
+
+# RBAC
+rbac:
+  create: true
+  readSecrets: false

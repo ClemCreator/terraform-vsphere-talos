@@ -10,5 +10,6 @@ resources:
   
   # Application components (ArgoCD-managed)
   - gitea.yaml
+  - jenkins.yaml
   - trust-manager.yaml
   - reloader.yaml
