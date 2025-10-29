@@ -25,9 +25,11 @@ controller:
     enabled: true
     ingressClassName: cilium
     hostName: jenkins.civastack.net
-    tls: true
     annotations: {}
-    # TLS secret will be created by cert-manager
+    tls:
+      - secretName: jenkins-tls
+        hosts:
+          - jenkins.civastack.net
 
   # Install essential plugins
   installPlugins:
