@@ -1,3 +1,6 @@
+# ClusterIssuer for ingress certificates
+# Uses an external CA certificate deployed via deploy-ca-secret.sh
+# The CA certificate and private key are stored in the 'ingress-tls' secret
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:

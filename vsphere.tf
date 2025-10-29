@@ -89,12 +89,27 @@ resource "vsphere_virtual_machine" "controller" {
   }
 }
 
-# Anti-affinity rule for controller nodes
-# Ensures control plane VMs don't run on the same ESXi host
-resource "vsphere_compute_cluster_vm_anti_affinity_rule" "controller_anti_affinity" {
-  name                = "${var.prefix}-controller-anti-affinity"
+# Anti-affinity rules for controller nodes (per site)
+# Ensures control plane VMs don't run on the same ESXi host within each site
+
+# VLB site - even-numbered controllers (0, 2, 4, ...)
+resource "vsphere_compute_cluster_vm_anti_affinity_rule" "controller_anti_affinity_vlb" {
+  name                = "${var.prefix}-controller-anti-affinity-vlb"
   compute_cluster_id  = data.vsphere_compute_cluster.compute_cluster_vlb.id
-  virtual_machine_ids = vsphere_virtual_machine.controller[*].id
+  virtual_machine_ids = [
+    for i, vm in vsphere_virtual_machine.controller : vm.id if i % 2 == 0
+  ]
+  enabled             = true
+  mandatory           = true
+}
+
+# Herstal site - odd-numbered controllers (1, 3, 5, ...)
+resource "vsphere_compute_cluster_vm_anti_affinity_rule" "controller_anti_affinity_her" {
+  name                = "${var.prefix}-controller-anti-affinity-her"
+  compute_cluster_id  = data.vsphere_compute_cluster.compute_cluster_her.id
+  virtual_machine_ids = [
+    for i, vm in vsphere_virtual_machine.controller : vm.id if i % 2 == 1
+  ]
   enabled             = true
   mandatory           = true
 }
@@ -155,12 +170,27 @@ resource "vsphere_virtual_machine" "worker" {
   }
 }
 
-# Anti-affinity rule for worker nodes
-# Ensures worker VMs don't run on the same ESXi host
-resource "vsphere_compute_cluster_vm_anti_affinity_rule" "worker_anti_affinity" {
-  name                = "${var.prefix}-worker-anti-affinity"
+# Anti-affinity rules for worker nodes (per site)
+# Ensures worker VMs don't run on the same ESXi host within each site
+
+# VLB site - even-numbered workers (0, 2, 4, ...)
+resource "vsphere_compute_cluster_vm_anti_affinity_rule" "worker_anti_affinity_vlb" {
+  name                = "${var.prefix}-worker-anti-affinity-vlb"
   compute_cluster_id  = data.vsphere_compute_cluster.compute_cluster_vlb.id
-  virtual_machine_ids = vsphere_virtual_machine.worker[*].id
+  virtual_machine_ids = [
+    for i, vm in vsphere_virtual_machine.worker : vm.id if i % 2 == 0
+  ]
   enabled             = true
-  mandatory           = false # make non-mandatory to allow co-location if needed (more than 3 workers nodes in cluster of 3 hosts)
+  mandatory           = false  # Allow flexibility if more VMs than hosts
+}
+
+# Herstal site - odd-numbered workers (1, 3, 5, ...)
+resource "vsphere_compute_cluster_vm_anti_affinity_rule" "worker_anti_affinity_her" {
+  name                = "${var.prefix}-worker-anti-affinity-her"
+  compute_cluster_id  = data.vsphere_compute_cluster.compute_cluster_her.id
+  virtual_machine_ids = [
+    for i, vm in vsphere_virtual_machine.worker : vm.id if i % 2 == 1
+  ]
+  enabled             = true
+  mandatory           = false  # Allow flexibility if more VMs than hosts
 }

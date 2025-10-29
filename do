@@ -98,9 +98,15 @@ function apply {
   terraform output -raw talosconfig >talosconfig.yml
   terraform output -raw kubeconfig >kubeconfig.yml
   health
+  deploy-ca-secret
   piraeus-install
   export-kubernetes-ingress-ca-crt
   info
+}
+
+function deploy-ca-secret {
+  step 'deploy CA secret for cert-manager'
+  ./deploy-ca-secret.sh
 }
 
 function health {

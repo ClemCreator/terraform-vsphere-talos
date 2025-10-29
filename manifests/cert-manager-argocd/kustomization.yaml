@@ -15,6 +15,4 @@ helmCharts:
 # Additional resources applied after Helm chart
 resources:
   - namespace.yaml
-  - cluster-issuer-selfsigned.yaml
-  - certificate-ingress.yaml
   - cluster-issuer-ingress.yaml
