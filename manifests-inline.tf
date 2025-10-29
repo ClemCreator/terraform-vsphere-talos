@@ -101,5 +101,9 @@ resource "local_file" "export_inline_manifests" {
     "# Source: ArgoCD (GitOps controller)",
     data.helm_template.argocd_inline.manifest,
   ])
+
+    lifecycle {
+    ignore_changes = all
+  }
 }
 
