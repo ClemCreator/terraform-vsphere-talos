@@ -89,6 +89,16 @@ resource "vsphere_virtual_machine" "controller" {
   }
 }
 
+# Anti-affinity rule for controller nodes
+# Ensures control plane VMs don't run on the same ESXi host
+resource "vsphere_compute_cluster_vm_anti_affinity_rule" "controller_anti_affinity" {
+  name                = "${var.prefix}-controller-anti-affinity"
+  compute_cluster_id  = data.vsphere_compute_cluster.compute_cluster_vlb.id
+  virtual_machine_ids = vsphere_virtual_machine.controller[*].id
+  enabled             = true
+  mandatory           = true
+}
+
 # see https://www.terraform.io/docs/providers/vsphere/r/virtual_machine.html
 resource "vsphere_virtual_machine" "worker" {
   count                       = var.worker_count
@@ -143,4 +153,14 @@ resource "vsphere_virtual_machine" "worker" {
       extra_config["guestinfo.talos.config"],
     ]
   }
+}
+
+# Anti-affinity rule for worker nodes
+# Ensures worker VMs don't run on the same ESXi host
+resource "vsphere_compute_cluster_vm_anti_affinity_rule" "worker_anti_affinity" {
+  name                = "${var.prefix}-worker-anti-affinity"
+  compute_cluster_id  = data.vsphere_compute_cluster.compute_cluster_vlb.id
+  virtual_machine_ids = vsphere_virtual_machine.worker[*].id
+  enabled             = true
+  mandatory           = false # make non-mandatory to allow co-location if needed (more than 3 workers nodes in cluster of 3 hosts)
 }
