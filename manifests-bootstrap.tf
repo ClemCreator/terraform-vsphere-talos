@@ -12,14 +12,9 @@ resource "terraform_data" "cluster_ready" {
 
 # Deploy the app-root application that manages all other ArgoCD applications
 # This implements the "App of Apps" pattern
+# This resource runs ONLY ONCE during initial bootstrap, then is ignored
 resource "null_resource" "deploy_app_root" {
   depends_on = [terraform_data.cluster_ready]
-
-  # Trigger redeployment when the app-root manifest changes
-  triggers = {
-    manifest_sha = filesha256("${path.module}/manifests/bootstrap/app-root.yaml")
-    kubeconfig   = talos_cluster_kubeconfig.talos.kubeconfig_raw
-  }
 
   provisioner "local-exec" {
     command = <<-EOT
@@ -55,14 +50,9 @@ KUBECONFIG
     EOT
   }
 
-  # Cleanup: remove app-root when destroying
-  provisioner "local-exec" {
-    when    = destroy
-    command = <<-EOT
-      if [ -f ${path.module}/kubeconfig.yml ]; then
-        kubectl --kubeconfig ${path.module}/kubeconfig.yml delete -f ${path.module}/manifests/bootstrap/app-root.yaml --ignore-not-found=true || true
-      fi
-    EOT
+  # Ignore all changes after initial creation - bootstrap runs only once
+  lifecycle {
+    ignore_changes = all
   }
 }
 
