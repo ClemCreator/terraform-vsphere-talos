@@ -21,4 +21,10 @@ configs:
 server:
   ingress:
     enabled: true
+    ingressClassName: cilium
+    hostname: argocd.civastack.net
     tls: true
+    extraTls:
+      - secretName: argocd-server-tls
+        hosts:
+          - argocd.civastack.net
