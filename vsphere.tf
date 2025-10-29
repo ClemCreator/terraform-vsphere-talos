@@ -2,13 +2,25 @@ data "vsphere_datacenter" "datacenter" {
   name = var.vsphere_datacenter
 }
 
-data "vsphere_compute_cluster" "compute_cluster" {
-  name          = var.vsphere_compute_cluster
+# Compute clusters for multi-site deployment
+data "vsphere_compute_cluster" "compute_cluster_vlb" {
+  name          = var.vsphere_compute_cluster_vlb
   datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
-data "vsphere_datastore" "datastore" {
-  name          = var.vsphere_datastore
+data "vsphere_compute_cluster" "compute_cluster_her" {
+  name          = var.vsphere_compute_cluster_her
+  datacenter_id = data.vsphere_datacenter.datacenter.id
+}
+
+# Datastores for multi-site deployment
+data "vsphere_datastore" "datastore_vlb" {
+  name          = var.vsphere_datastore_vlb
+  datacenter_id = data.vsphere_datacenter.datacenter.id
+}
+
+data "vsphere_datastore" "datastore_her" {
+  name          = var.vsphere_datastore_her
   datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
@@ -42,8 +54,11 @@ resource "vsphere_virtual_machine" "controller" {
   wait_for_guest_net_timeout  = 0
   wait_for_guest_ip_timeout   = 0
   enable_disk_uuid            = true # NB the VM must have disk.EnableUUID=1 for, e.g., k8s persistent storage.
-  resource_pool_id            = data.vsphere_compute_cluster.compute_cluster.resource_pool_id
-  datastore_id                = data.vsphere_datastore.datastore.id
+  
+  # Multi-site distribution: even-numbered VMs go to VLB, odd-numbered to Herstal
+  resource_pool_id            = count.index % 2 == 0 ? data.vsphere_compute_cluster.compute_cluster_vlb.resource_pool_id : data.vsphere_compute_cluster.compute_cluster_her.resource_pool_id
+  datastore_id                = count.index % 2 == 0 ? data.vsphere_datastore.datastore_vlb.id : data.vsphere_datastore.datastore_her.id
+  
   scsi_type                   = data.vsphere_virtual_machine.talos_template.scsi_type
   disk {
     unit_number      = 0
@@ -88,8 +103,11 @@ resource "vsphere_virtual_machine" "worker" {
   wait_for_guest_net_timeout  = 0
   wait_for_guest_ip_timeout   = 0
   enable_disk_uuid            = true # NB the VM must have disk.EnableUUID=1 for, e.g., k8s persistent storage.
-  resource_pool_id            = data.vsphere_compute_cluster.compute_cluster.resource_pool_id
-  datastore_id                = data.vsphere_datastore.datastore.id
+  
+  # Multi-site distribution: even-numbered VMs go to VLB, odd-numbered to Herstal
+  resource_pool_id            = count.index % 2 == 0 ? data.vsphere_compute_cluster.compute_cluster_vlb.resource_pool_id : data.vsphere_compute_cluster.compute_cluster_her.resource_pool_id
+  datastore_id                = count.index % 2 == 0 ? data.vsphere_datastore.datastore_vlb.id : data.vsphere_datastore.datastore_her.id
+  
   scsi_type                   = data.vsphere_virtual_machine.talos_template.scsi_type
   disk {
     unit_number      = 0

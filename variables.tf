@@ -138,6 +138,19 @@ variable "vsphere_compute_cluster" {
   default = "Cluster"
 }
 
+# Multi-site configuration for load balancing
+variable "vsphere_compute_cluster_vlb" {
+  description = "Compute cluster at Villers-le-Bouillet site (for even-numbered VMs)"
+  type        = string
+  default     = "Developpement-Villers-le-Bouillet"
+}
+
+variable "vsphere_compute_cluster_her" {
+  description = "Compute cluster at Herstal site (for odd-numbered VMs)"
+  type        = string
+  default     = "Developpement-Herstal"
+}
+
 variable "vsphere_network" {
   type    = string
   default = "VM Network"
@@ -146,6 +159,19 @@ variable "vsphere_network" {
 variable "vsphere_datastore" {
   type    = string
   default = "Datastore"
+}
+
+# Multi-site datastore configuration
+variable "vsphere_datastore_vlb" {
+  description = "Datastore at Villers-le-Bouillet site (for even-numbered VMs)"
+  type        = string
+  default     = "vol_vlb_dev_003"
+}
+
+variable "vsphere_datastore_her" {
+  description = "Datastore at Herstal site (for odd-numbered VMs)"
+  type        = string
+  default     = "vol_her_dev_002"
 }
 
 variable "vsphere_folder" {
