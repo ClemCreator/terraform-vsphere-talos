@@ -183,6 +183,8 @@ kind: StorageClass
 provisioner: linstor.csi.linbit.com
 metadata:
   name: linstor-lvm-r1
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
 allowVolumeExpansion: true
 volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Delete
