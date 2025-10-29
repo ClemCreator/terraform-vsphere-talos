@@ -2,9 +2,10 @@
 # see https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins
 
 controller:
-  adminUser: "admin"
-  # Password will be auto-generated if not set
-  # adminPassword: ""
+  admin:
+    username: "admin"
+    # Password will be auto-generated if not set
+    # password: ""
   
   # Jenkins URL configuration
   jenkinsUrl: "https://jenkins.civastack.net"
