@@ -2,3 +2,9 @@
 # see https://artifacthub.io/packages/helm/cert-manager/cert-manager
 
 installCRDs: true
+
+# Configure leader election to use cert-manager namespace instead of kube-system
+# This avoids RBAC issues in restricted environments (GKE Autopilot, etc.)
+global:
+  leaderElection:
+    namespace: cert-manager
