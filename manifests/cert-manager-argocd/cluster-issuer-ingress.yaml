@@ -8,3 +8,5 @@ metadata:
 spec:
   ca:
     secretName: ingress-tls
+    # CA issuers always look for secrets in the cert-manager namespace
+    # This is a known limitation of cert-manager ClusterIssuers

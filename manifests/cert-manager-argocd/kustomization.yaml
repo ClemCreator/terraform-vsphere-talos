@@ -16,3 +16,4 @@ helmCharts:
 resources:
   - namespace.yaml
   - cluster-issuer-ingress.yaml
+  - leader-election-rbac.yaml
