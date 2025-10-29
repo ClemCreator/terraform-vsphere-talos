@@ -13,41 +13,8 @@ locals {
   argocd_domain    = "argocd.${var.ingress_domain}"
   argocd_namespace = "argocd"
 
-  # Cilium Helm values
-  cilium_values = yamlencode({
-    ipam = {
-      mode = "kubernetes"
-    }
-    securityContext = {
-      capabilities = {
-        ciliumAgent = [
-          "CHOWN", "KILL", "NET_ADMIN", "NET_RAW", "IPC_LOCK",
-          "SYS_ADMIN", "SYS_RESOURCE", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID"
-        ]
-        cleanCiliumState = ["NET_ADMIN", "SYS_ADMIN", "SYS_RESOURCE"]
-      }
-    }
-    cgroup = {
-      autoMount = { enabled = false }
-      hostRoot  = "/sys/fs/cgroup"
-    }
-    k8sServiceHost      = "localhost"
-    k8sServicePort      = local.kubeprism_port
-    kubeProxyReplacement = true
-    l2announcements = { enabled = true }
-    devices = ["eth0"]
-    ingressController = {
-      enabled         = true
-      default         = true
-      loadbalancerMode = "shared"
-      enforceHttps    = false
-    }
-    envoy = { enabled = true }
-    hubble = {
-      relay = { enabled = true }
-      ui    = { enabled = true }
-    }
-  })
+  # Cilium Helm values - loaded from file to avoid duplication
+  cilium_values = file("${path.module}/manifests/cilium/values.yaml")
 
   # cert-manager Helm values
   cert_manager_values = yamlencode({
