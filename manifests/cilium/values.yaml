@@ -47,7 +47,8 @@ ingressController:
   default: true
   loadbalancerMode: shared
   enforceHttps: false
-
+  service:
+    allocateLoadBalancerNodePorts: false
 # Envoy proxy for ingress
 envoy:
   enabled: true
